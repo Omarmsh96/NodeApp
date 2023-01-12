@@ -1,0 +1,31 @@
+version: "3"
+services:
+  node-app:
+    container_name: containerapp
+    build: 
+      context: .
+      target: development
+      #args: 
+       # - NODE_ENV = development
+    volumes:
+      - ./src:/app/src:ro
+    ports:
+      - "4000:4000"
+    command: npm run start-dev 
+    environment:
+      - NODE_ENV=development
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo-db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example 
+volumes:
+  mongo-db:
+
+#docker-compose -f docker-compose.dev.yml up 
+# docker-compose -f docker-compose.dev.yml up --build 
+# docker exec -it docker-mongo-1 mongosh -u root -p example  show dbs . create new db -> use test , create collection => db.book.insert({tile:}) -db.book.find() 
+# remove un unused volume  --: dokcer volume prune

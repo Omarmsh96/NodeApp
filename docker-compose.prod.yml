@@ -1,0 +1,25 @@
+version: "3"
+services:
+  node-app:
+    container_name: containerapp
+    build: 
+      context: .
+      target: production
+    ports:
+      - "4000:4000"
+    command: npm start
+    environment:
+      - NODE_ENV=production
+ 
+  
+
+
+  #build: 
+      #context: .
+      #args:
+       # - NODE_ENV=production
+      
+  #  volumes:
+  #   - ./src:/app/src:ro  .. in prod env there is no need the follow the changes in the code 
+  #docker compose let to run more than one container or service and those service can talk with each other 
+  #docker network docker_default 
