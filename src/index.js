@@ -9,7 +9,7 @@ const passwordDB = 'example' ;
 const portDB =27017; 
 const hostdb = '172.29.0.2'; 
 
-const URI = 'mongodb://<userDB>:<passwordDB>@<hostdb>:<portDB>';
+const URI = 'mongodb://userDB:passwordDB@hostdb:portDB';
 mongoose.connect(URI).then( () => console.log('connect to db .. ') )
 .catch((err) => console.log('failed to connect to db:', err));
 
