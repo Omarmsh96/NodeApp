@@ -14,7 +14,7 @@ mongoose.connect(URI).then( () => console.log('connect to db .. ') )
 .catch((err) => console.log('failed to connect to db:', err));
 
 app.get ('/', (req, res) => {
-    res.send(" <h1>A heading here hi hi hi dev </h1>")
+    res.send(" <h1>A heading here hi  dev </h1>")
 });
 
 app.listen(PORT, () => console.log('app is running on port: ${PORT}'));
