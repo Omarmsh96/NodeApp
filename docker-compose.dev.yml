@@ -2,6 +2,7 @@ version: "3"
 services:
   node-app:
     container_name: containerapp
+    image: omarhassan96/dockerapp1
     build: 
       context: .
       target: development
