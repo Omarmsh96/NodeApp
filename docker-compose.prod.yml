@@ -1,0 +1,40 @@
+version: "3"
+services:
+  node-app:
+    image: omarhassan96/dockerapp1
+    build: 
+      context: .
+      target: production
+    command: npm start
+    environment:
+      - NODE_ENV=production
+ 
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo-db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+         
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - node-app       
+volumes:
+  mongo-db: 
+
+  #build: 
+      #context: .
+      #args:
+       # - NODE_ENV=production
+      
+  #  volumes:
+  #   - ./src:/app/src:ro  .. in prod env there is no need the follow the changes in the code 
+  #docker compose let to run more than one container or service and those service can talk with each other 
+  #docker network docker_default 
