@@ -10,7 +10,7 @@ exports.getCategories= asyncHandler(async(req ,res) => {
     //Pagination variables are defined to determine the current page,
     const page= req.query.page *1 || 1;  // multi * 1 cause request is comming as string need to convert as num 
     const limit = 5;
-    const skip = ( page - 1 ) * limit  // (2 -1 ) * 5 = 5 that mean skip first 5 document and get the next 5 doc 
+    const skip = ( page - 1 ) * limit  
 
     const categories = await categoryModel.find({}).skip(skip).limit(limit)   // return a list of cat
     

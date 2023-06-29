@@ -1,19 +1,26 @@
 
-const express = require('express');
+const express =  require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const morgan = require ('morgan');
+const dotenv = require('dotenv');
+const ErorrApi = require('./middleware/ErorrApi')
+
 dotenv.config({ path: '.env' });
-//const productRoute = require('./Routes/productRoute');
+//const jwt = require('jsonwebtoken')
+//const subcatRoute = require('./Routes/subcatRoute');
 const categoryRoute = require('./Routes/categoryRoute');
+const userRoute= require('./Routes/userRoute');
+const authenRoute = require('./Routes/authenRoute');
+
 //const productModel = require('./model/productmodel');
+//const productRoute = require('./Routes/productRoute');
 
 
 const app = express();
 
-if(process.env.NODE_ENV == 'development'){
+if(process.env.NODE_ENV === 'development'){
   app.use(morgan("dev"));
-  console.log(`mode: ${process.env.NODE_ENV} `);
+  console.log(`mode: ${process.env.NODE_ENV}`);
 }
 
 //middleware
@@ -42,12 +49,27 @@ mongoose.connect(process.env.DB_URI, {
 
 
 //Mount routes
-//app.use("/api/v1/products", productRoute);
-app.use("/api/categories", categoryRoute)
 
+//app.use("/api/subcategory", subcatRoute)
+app.use('/api/category', categoryRoute);
+app.use('/api/user', userRoute)
+app.use('/api/authen' ,authenRoute)
+
+app.all('*', (req,res,next) =>{
+ 
+  next(new ErorrApi(`can not find this route : ${req.originalUrl}`, 400))
+})
 // error handling middleware
 app.use((err,req, res, next) => {
- res.json({err}).status(500);
+err.statusCode = err.statusCode || 500 ;
+err.status = err.status || 'error'
+ res.status(err.statusCode).json({
+  status : err.status,
+  error : err,
+  message :err.message,
+  stack: err.stack // where the error happend
+
+ });
 });
 
 
