@@ -8,15 +8,13 @@ const router = express.Router();
 
 
 router.route('/')
-      .get( check("name").notEmpty.withMessage('name required'), validator, getCategories)
-      .post(createCategory);
+      .get(  getCategories)
+      .post(check("name").notEmpty().withMessage('name required'),  createCategory);
 
 
       router.route('/:id')
-       //validtion // check before going to getCategory 
-      .get(
-        check('id').isMongoId().withMessage('in valid category id'),validator,getCategory)
-      .put(check('id').isMongoId().withMessage('in valid category id'),validator,updateCategory)
+      .get(check('id').isMongoId().withMessage('in valid category id'),getCategory)
+      .put(check('id').isMongoId().withMessage('in valid category id'),updateCategory)
       .delete(deleteCategory);
 
 module.exports = router; 
