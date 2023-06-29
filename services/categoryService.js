@@ -1,6 +1,8 @@
-const categoryModel = require('../model/categorymodel')
+
 const asyncHandler = require('express-async-handler')
 const slugify = require('slugify')
+const categoryModel = require('../model/categorymodel')
+
 
 
 // get the list of categortes  // GET API // access pucblic (user )
@@ -50,11 +52,8 @@ exports.updateCategory = asyncHandler(async (req, res) => {
  // access private 
 
  exports.deleteCategory = asyncHandler(async (req, res) => {
-    const {id} = req.params;
-  
-  
+    const {id} = req.params; 
     const category = await categoryModel.findByIdAndDelete(id);
-   
     if (!category) {
         res.status(404).json({message: `no category for this id ${id}`})
     }
@@ -64,7 +63,7 @@ exports.updateCategory = asyncHandler(async (req, res) => {
 //create Category // POST APi  // acess private (admin )
 
 exports.createCategory = asyncHandler(async (req, res) => {
-    const name = req.body.name;
+    const {name} = req.body ;
     const Category = await categoryModel.create({ name , slug: slugify(name) });      // method is used to create a new category document in the MongoDB database with the provided name.
     res.status(201).json({ data: Category });
   });
