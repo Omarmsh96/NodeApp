@@ -8,7 +8,7 @@ const categoryModel = require('../model/categorymodel')
 // get the list of categortes  // GET API // access pucblic (user )
 exports.getCategories= asyncHandler(async(req ,res) => {
     //Pagination variables are defined to determine the current page,
-    const page= req.query.page *1 || 1;  // multi * 1 cause request is comming as string need to convert as num 
+    const page= req.query.page *1 || 1;  
     const limit = 5;
     const skip = ( page - 1 ) * limit  
 
@@ -64,7 +64,7 @@ exports.updateCategory = asyncHandler(async (req, res) => {
 
 exports.createCategory = asyncHandler(async (req, res) => {
     const {name} = req.body ;
-    const Category = await categoryModel.create({ name , slug: slugify(name) });      // method is used to create a new category document in the MongoDB database with the provided name.
+    const Category = await categoryModel.create({ name , slug: slugify(name) });      
     res.status(201).json({ data: Category });
   });
   
