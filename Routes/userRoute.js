@@ -17,7 +17,7 @@ router.route('/')
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-router.put('/changepassword/:id', changePasswordValidation ,changePassword)
+//router.put('/changepassword/:id', changePasswordValidation ,changePassword)
 
 router.route('/:id')
   .get(check('id').isMongoId().withMessage('This ID does not exist'), getUser)

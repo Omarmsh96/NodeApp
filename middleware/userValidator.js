@@ -2,6 +2,7 @@ const {check} = require('express-validator');
 //const validator = require('./validator')
 const userModel = require('../model/userModel');
 const bcrypt = require('bcryptjs');
+const ErorrApi = require('./ErrorApi')
 
 exports.userValidation = [
   check('email')
@@ -21,7 +22,7 @@ exports.userValidation = [
   .isLength({ min: 8 }).withMessage('Password is invalid')
   .custom((password, { req }) => {
     if (password !== req.body.confirmPassword) {
-      throw new Error('Passwords do not match');
+      throw new ErorrApi('Passwords do not match');
     }
     return true;
   }),
@@ -34,25 +35,22 @@ exports.changePasswordValidation = [
   check('currentPassword').notEmpty().withMessage('Current Password is required'),
   check('confirmPassword').notEmpty().withMessage('Confirm Password is required'),
   
-  check('Password').notEmpty().withMessage('Confirm Password is required')
-  .custom(async(password, { req }) => {
-    // Check if the current password is correct
-    const user = await userModel.findById(req.params.id)
-    if(!user) {
-      throw new Error('User not found');
-    }
-    //take two parameters password (that comes from req.body) and hashed pass 
-    const isCorrectPassword = await bcrypt.compare(req.body.currentPassword, user.password)
-    if (!isCorrectPassword) {
-      throw new Error('Current password is incorrect');
-    }
-    if (password !== req.body.confirmPassword) {
-      throw new Error('Passwords do not match');
-    }
-    return true;
-
-  }),
-]
+  check('password').notEmpty().withMessage('Confirm Password is required')
+    .custom(async (password, { req }) => {
+      const user = await userModel.findById(req.params.id);
+      if (!user) {
+        throw new ErrorApi('User not found');
+      }
+      const isCorrectPassword = await bcrypt.compare(req.body.currentPassword, user.password);
+      if (!isCorrectPassword) {
+        throw new Error('Current password is incorrect');
+      }
+      if (password !== req.body.confirmPassword) {
+        throw new ErrorApi('Passwords do not match');
+      }
+      return true;
+    }),
+];
 
 /*
 
