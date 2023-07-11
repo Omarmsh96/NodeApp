@@ -28,7 +28,6 @@ exports.getCategory = asyncHandler(async(req ,res,next) => {
 
        return next( new ErrorApi(`no category for this id ${id}`, 404 ), )
         //res.status(404).json({message: `no category for this id ${id}`})
-
     }
     res.status(200).json({data: category})
 });

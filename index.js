@@ -3,17 +3,14 @@ const express =  require('express');
 const mongoose = require('mongoose');
 const morgan = require ('morgan');
 const dotenv = require('dotenv');
-const ErorrApi = require('./middleware/ErrorApi')
-
+const ErrorApi = require('./middleware/ErrorApi')
+const errorHandling = require('./middleware/ErrorMiddelware')
 dotenv.config({ path: '.env' });
 //const jwt = require('jsonwebtoken')
-//const subcatRoute = require('./Routes/subcatRoute');
 const categoryRoute = require('./Routes/categoryRoute');
 const userRoute= require('./Routes/userRoute');
 const authenRoute = require('./Routes/authenRoute');
 
-//const productModel = require('./model/productmodel');
-//const productRoute = require('./Routes/productRoute');
 
 
 const app = express();
@@ -25,10 +22,10 @@ if(process.env.NODE_ENV === 'development'){
 
 //middleware
 
-app.use(express.json()); // parsing comming json(string) and convert to js obj
+app.use(express.json()); 
 
 const PORT = process.env.PORT ||8000;
-app.listen(PORT, () => {
+const server =app.listen(PORT, () => {
     console.log('app is running ')
   
 })
@@ -42,13 +39,10 @@ mongoose.connect(process.env.DB_URI, {
   .then((conn) => {
     console.log(`Connected to the database: ${conn.connection.host}`);
   })
-  .catch((err) => {
-    console.error(`Failed to connect to the database: ${err}`);
-    process.exit(1);
-  });
-
-
-//Mount routes
+  // .catch((err) => {
+  //   console.error(`Failed to connect to the database: ${err}`);
+  //   process.exit(1);
+  // });
 
 //app.use("/api/subcategory", subcatRoute)
 app.use('/api/category', categoryRoute);
@@ -57,12 +51,20 @@ app.use('/api/authen' ,authenRoute)
 
 app.all('*', (req,res,next) =>{
  
-  next(new ErorrApi(`can not find this route : ${req.originalUrl}`, 400))
+  next(new ErrorApi(`can not find this route : ${req.originalUrl}`, 400))
 })
 // error handling middleware
-app.use(ErorrApi);
+app.use(errorHandling);
 
+//handling errors outside Express
+process.on('unhandledRejection', (err)=> {
+  console.error(`unhandledRejection Errors: ${err.message}`);
+  server.close(()=>{
+    process.exit(1);
+  })
+ 
 
+})
 
 
 //.then( () => console.log('connect to db .. ') )
@@ -70,7 +72,6 @@ app.use(ErorrApi);
 
 /*
 
-s
 mongoose.connect('mongodb://userDB:passwordDB@172.29.0.2:27017',{
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -92,9 +93,5 @@ if(process.env.NODE_ENV == 'development'){
   console.log('Mode: ${process.env.NODE_ENV}');
 }
 
-app.get ('/', (req, res) => {
-    
-  const message = (' <h1> dev used docker hub new version </h1>');  //os.hostname -- get the id of the container 
-  res.send(message)
 });
 */
